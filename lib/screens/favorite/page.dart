@@ -32,11 +32,15 @@ class FavoritePage extends StatelessWidget {
                 ],
               ),
             ),
-            ListView.builder(
-              itemCount: 1,
-              itemBuilder: (context, index) {
-                return FavouriteItem();
-              },
+            Container(
+              padding: EdgeInsets.symmetric(vertical: 20.h),
+              constraints: BoxConstraints(maxHeight: 1000.h),
+              child: ListView.builder(
+                itemCount: 5,
+                itemBuilder: (context, index) {
+                  return FavouriteItem();
+                },
+              ),
             )
           ],
         )));

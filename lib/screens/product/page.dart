@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:odin/components/custom_text.dart';
+import 'package:odin/components/text_input.dart';
 import 'package:odin/constants/app_theme.dart';
+import 'package:odin/models/cart.dart';
+import 'package:odin/models/product.dart';
+import 'package:odin/providers/cart_provider.dart';
+import 'package:provider/provider.dart';
 
 class ProductDetailPage extends StatelessWidget {
-  const ProductDetailPage({Key? key}) : super(key: key);
+  final Product product;
+  const ProductDetailPage({Key? key, required this.product}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -21,10 +27,12 @@ class ProductDetailPage extends StatelessWidget {
                   Positioned(
                       right: 0,
                       child: ClipRRect(
+                        borderRadius: BorderRadius.only(
+                            bottomLeft: Radius.circular(48.sp)),
                         child: Hero(
-                          tag: "nancy",
+                          tag: "${product.id}",
                           child: Image.asset(
-                            "assets/images/minimal-stand.png",
+                            "assets/images/${product.img}",
                             width: 320.w,
                             height: 450.h,
                             fit: BoxFit.cover,
@@ -34,15 +42,20 @@ class ProductDetailPage extends StatelessWidget {
                   Positioned(
                       top: 40.h,
                       left: 32.w,
-                      child: Container(
-                        height: 40.h,
-                        width: 40.h,
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                            boxShadow: [AppTheme.boxShadow],
-                            color: AppTheme.white,
-                            borderRadius: BorderRadius.circular(5)),
-                        child: Icon(Icons.chevron_left_outlined),
+                      child: InkWell(
+                        onTap: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: Container(
+                          height: 40.h,
+                          width: 40.h,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                              boxShadow: [AppTheme.boxShadow],
+                              color: AppTheme.white,
+                              borderRadius: BorderRadius.circular(6.sp)),
+                          child: Icon(Icons.chevron_left_outlined),
+                        ),
                       )),
                   Positioned(
                       top: 150.h,
@@ -54,7 +67,7 @@ class ProductDetailPage extends StatelessWidget {
                         decoration: BoxDecoration(
                             boxShadow: [AppTheme.boxShadow],
                             color: AppTheme.white,
-                            borderRadius: BorderRadius.circular(5)),
+                            borderRadius: BorderRadius.circular(12.sp)),
                         child: Icon(Icons.chevron_left_outlined),
                       ))
                 ],
@@ -68,7 +81,7 @@ class ProductDetailPage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   CustomText(
-                    text: "Minimal Stand",
+                    text: "${product.name}",
                     fw: FontWeight.w400,
                     fs: 24.sp,
                     color: AppTheme.black,
@@ -78,7 +91,7 @@ class ProductDetailPage extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       CustomText(
-                        text: "\$ 50",
+                        text: "\$ ${product.price}",
                         fs: 30.sp,
                         fw: FontWeight.w500,
                         color: AppTheme.black,
@@ -102,7 +115,7 @@ class ProductDetailPage extends StatelessWidget {
                         width: 6.w,
                       ),
                       CustomText(
-                        text: "4.5",
+                        text: "${product.ratings}",
                         fw: FontWeight.w500,
                         fs: 18.sp,
                         color: AppTheme.secondary,
@@ -111,7 +124,7 @@ class ProductDetailPage extends StatelessWidget {
                         width: 120.w,
                       ),
                       CustomText(
-                        text: "(50 reviews)",
+                        text: "(${product.review} reviews)",
                         fw: FontWeight.w500,
                         fs: 14.sp,
                         color: AppTheme.secondary,
@@ -119,8 +132,7 @@ class ProductDetailPage extends StatelessWidget {
                     ],
                   ),
                   CustomText(
-                    text:
-                        " Minimal Stand is made of by natural wood. The design that is very simple and minimal. This is truly one of the best furnitures in any family for now. With 3 different colors, you can easily select the best match for your home.",
+                    text: product.description,
                     fw: FontWeight.w300,
                     fs: 14.sp,
                     color: AppTheme.secondary,
@@ -144,20 +156,49 @@ class ProductDetailPage extends StatelessWidget {
                           ),
                         ),
                         Spacer(),
-                        Container(
-                            width: 250.w,
-                            height: 60.h,
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                                boxShadow: [AppTheme.boxShadow],
-                                color: AppTheme.black,
-                                borderRadius: BorderRadius.circular(5)),
-                            child: CustomText(
-                              text: "Add to cart",
-                              color: AppTheme.white,
-                              fw: FontWeight.w500,
-                              fs: 20.sp,
-                            )),
+                        Consumer<CartProvider>(
+                            builder: (context, carts, child) {
+                          return GestureDetector(
+                            onTap: () {
+                              carts.addToCart(product);
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(SnackBar(
+                                      duration: Duration(milliseconds: 500),
+                                      elevation: 0,
+                                      backgroundColor: Colors.transparent,
+                                      content: Container(
+                                        height: 60.h,
+                                        width: 200.w,
+                                        margin: EdgeInsets.only(bottom: 40.h),
+                                        alignment: Alignment.center,
+                                        decoration: BoxDecoration(
+                                            color: AppTheme.white,
+                                            boxShadow: [AppTheme.boxShadow],
+                                            borderRadius:
+                                                BorderRadius.circular(20)),
+                                        child: CustomText(
+                                          text: "Added to cart",
+                                          fs: 16.sp,
+                                          fw: FontWeight.bold,
+                                        ),
+                                      )));
+                            },
+                            child: Container(
+                                width: 250.w,
+                                height: 60.h,
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                    boxShadow: [AppTheme.boxShadow],
+                                    color: AppTheme.black,
+                                    borderRadius: BorderRadius.circular(5)),
+                                child: CustomText(
+                                  text: "Add to cart",
+                                  color: AppTheme.white,
+                                  fw: FontWeight.w500,
+                                  fs: 20.sp,
+                                )),
+                          );
+                        }),
                       ],
                     ),
                   )
@@ -169,42 +210,4 @@ class ProductDetailPage extends StatelessWidget {
       ),
     );
   }
-}
-
-class TextInputView extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) => Container(
-        width: 110.h,
-        height: 30.h,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Container(
-              width: 30.w,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                  boxShadow: [AppTheme.boxShadow],
-                  color: AppTheme.placeholder.withOpacity(0.2),
-                  borderRadius: BorderRadius.circular(5)),
-              child: Icon(Icons.add_outlined),
-            ),
-            CustomText(
-              text: "02",
-              fs: 18.sp,
-              color: AppTheme.secondary,
-            ),
-            Container(
-              width: 30.w,
-              height: 30.h,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                  boxShadow: [AppTheme.boxShadow],
-                  color: AppTheme.placeholder.withOpacity(0.2),
-                  borderRadius: BorderRadius.circular(5)),
-              child: Icon(Icons.remove),
-            )
-          ],
-        ),
-      );
 }

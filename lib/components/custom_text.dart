@@ -23,6 +23,7 @@ class CustomText extends StatelessWidget {
       style: TextStyle(
           color: color,
           fontSize: fs.sp,
+          fontFamily: "ManRope",
           fontWeight: fw,
           letterSpacing: ls,
           decoration: TextDecoration.none),

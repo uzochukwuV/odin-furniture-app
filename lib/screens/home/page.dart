@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:odin/constants/app_theme.dart';
+import 'package:odin/screens/cart/page.dart';
 import 'package:odin/screens/favorite/page.dart';
 import 'package:odin/screens/home/home.dart';
 
@@ -12,7 +13,7 @@ class MyHome extends StatefulWidget {
 
 class _MyHomeState extends State<MyHome> {
   int _currentPage = 0;
-  List<Widget> pages = [HomeScreen(), FavoritePage(), Container(), Container()];
+  List<Widget> pages = [HomeScreen(), FavoritePage(), CartPage(), Container()];
   @override
   Widget build(BuildContext context) {
     return Scaffold(

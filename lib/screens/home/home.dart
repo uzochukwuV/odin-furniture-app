@@ -3,9 +3,35 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:odin/components/custom_text.dart';
 import 'package:odin/components/shop_item.dart';
 import 'package:odin/constants/app_theme.dart';
+import 'package:odin/models/product.dart';
 
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+class HomeScreen extends StatefulWidget {
+  HomeScreen({Key? key}) : super(key: key);
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+late Future<List<Product>> plist;
+List<Product> products = [];
+
+class _HomeScreenState extends State<HomeScreen> {
+  Future<List<Product>> getProductList() async {
+    await Future.delayed(Duration(seconds: 2));
+    var k = productList.map((product) {
+      return Product.fromJson(product);
+    });
+
+    return [...k];
+  }
+
+  @override
+  void initState() {
+    plist = getProductList();
+
+    // TODO: implement initState
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -17,6 +43,7 @@ class HomeScreen extends StatelessWidget {
       "bed.png",
       "simple-desk.png",
     ];
+
     return Container(
       width: 375.w,
       padding: EdgeInsets.all(18.sp),
@@ -87,17 +114,51 @@ class HomeScreen extends StatelessWidget {
                 },
               ),
             ),
-            Container(
-              constraints: BoxConstraints(maxHeight: 1000.h, maxWidth: 360.w),
-              child: GridView(
-                scrollDirection: Axis.vertical,
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    childAspectRatio: 0.63,
-                    mainAxisSpacing: 32.h),
-                children: [ShopItem()],
-              ),
-            )
+            FutureBuilder(
+                initialData: products,
+                future: plist,
+                builder: (context, snapshot) {
+                  if (products.isEmpty &&
+                          snapshot.connectionState == ConnectionState.waiting ||
+                      !snapshot.hasData) {
+                    return Container(
+                      constraints:
+                          BoxConstraints(maxHeight: 1000.h, maxWidth: 360.w),
+                      child: GridView(
+                        scrollDirection: Axis.vertical,
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            childAspectRatio: 0.63,
+                            crossAxisSpacing: 5,
+                            mainAxisSpacing: 32.h),
+                        children: [
+                          ShopItemShimer(),
+                          ShopItemShimer(),
+                          ShopItemShimer(),
+                          ShopItemShimer(),
+                          ShopItemShimer()
+                        ],
+                      ),
+                    );
+                  }
+                  products = snapshot.data! as List<Product>;
+                  return Container(
+                    constraints:
+                        BoxConstraints(maxHeight: 1000.h, maxWidth: 360.w),
+                    child: GridView.builder(
+                      scrollDirection: Axis.vertical,
+                      itemCount: snapshot.data!.length,
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          crossAxisSpacing: 5,
+                          childAspectRatio: 0.63,
+                          mainAxisSpacing: 32.h),
+                      itemBuilder: (context, index) => ShopItem(
+                        product: snapshot.data![index],
+                      ),
+                    ),
+                  );
+                })
           ],
         ),
       ),
