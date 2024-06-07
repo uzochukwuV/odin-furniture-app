@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:odin/components/custom_text.dart';
+import 'package:odin/components/favourite_item.dart';
 import 'package:odin/constants/app_theme.dart';
 
 class FavoritePage extends StatelessWidget {
@@ -31,6 +32,12 @@ class FavoritePage extends StatelessWidget {
                 ],
               ),
             ),
+            ListView.builder(
+              itemCount: 1,
+              itemBuilder: (context, index) {
+                return FavouriteItem();
+              },
+            )
           ],
         )));
   }
