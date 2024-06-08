@@ -3,9 +3,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:odin/components/custom_text.dart';
 import 'package:odin/components/text_input.dart';
 import 'package:odin/constants/app_theme.dart';
+import 'package:odin/models/cart.dart';
 
 class CartItem extends StatelessWidget {
-  const CartItem({Key? key}) : super(key: key);
+  final Cart cart;
+  const CartItem({Key? key, required this.cart}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +23,7 @@ class CartItem extends StatelessWidget {
               ClipRRect(
                 borderRadius: BorderRadius.circular(12),
                 child: Image.asset(
-                  "assets/images/minimal-stand.png",
+                  "assets/images/${cart.product.img}",
                   height: 110.h,
                   width: 110.w,
                   fit: BoxFit.cover,
@@ -31,17 +33,19 @@ class CartItem extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   CustomText(
-                    text: "Minimal Stand",
+                    text: "${cart.product.name}",
                     color: AppTheme.secondary,
                     fs: 14.sp,
                   ),
                   CustomText(
-                    text: "\$ 25.00",
+                    text: "\$ ${cart.product.price}",
                     fw: FontWeight.bold,
                     fs: 14.sp,
                   ),
                   Spacer(),
-                  TextInputView()
+                  TextInputView(
+                    amount: cart.amount,
+                  )
                 ],
               ),
               Column(

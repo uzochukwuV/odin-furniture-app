@@ -13,9 +13,23 @@ class MyHome extends StatefulWidget {
 
 class _MyHomeState extends State<MyHome> {
   int _currentPage = 0;
-  List<Widget> pages = [HomeScreen(), FavoritePage(), CartPage(), Container()];
+
+  void toCart() {
+    setState(() {
+      _currentPage = 2;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    List<Widget> pages = [
+      HomeScreen(
+        tocart: toCart,
+      ),
+      FavoritePage(),
+      CartPage(),
+      Container()
+    ];
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(child: pages[_currentPage]),

@@ -38,6 +38,7 @@ dependencies:
   flutter_screenutil:
   flutter_secure_storage:
   provider:
+  palette_generator:
   
 
 dev_dependencies:

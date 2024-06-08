@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:odin/components/custom_text.dart';
+import 'package:odin/components/image_palette.dart';
 import 'package:odin/components/text_input.dart';
 import 'package:odin/constants/app_theme.dart';
 import 'package:odin/models/cart.dart';
@@ -68,7 +69,7 @@ class ProductDetailPage extends StatelessWidget {
                             boxShadow: [AppTheme.boxShadow],
                             color: AppTheme.white,
                             borderRadius: BorderRadius.circular(12.sp)),
-                        child: Icon(Icons.chevron_left_outlined),
+                        child: ImagePalette(image: product.img),
                       ))
                 ],
               ),
@@ -96,7 +97,17 @@ class ProductDetailPage extends StatelessWidget {
                         fw: FontWeight.w500,
                         color: AppTheme.black,
                       ),
-                      TextInputView()
+                      Consumer<CartProvider>(builder: (context, carts, child) {
+                        int? cart = carts.cart
+                            .firstWhere(
+                              (element) => element.product.id == product.id,
+                              orElse: () => Cart(product, -1),
+                            )
+                            .amount;
+                        return TextInputView(
+                          amount: !cart.isNegative ? cart : 0,
+                        );
+                      })
                     ],
                   ),
                   SizedBox(

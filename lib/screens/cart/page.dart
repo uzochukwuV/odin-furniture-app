@@ -42,9 +42,11 @@ class CartPage extends StatelessWidget {
                 padding: EdgeInsets.symmetric(vertical: 20.h),
                 constraints: BoxConstraints(maxHeight: 1000.h),
                 child: ListView.builder(
-                  itemCount: carts.cart.products.length,
+                  itemCount: carts.cart.length,
                   itemBuilder: (context, index) {
-                    return CartItem();
+                    return CartItem(
+                      cart: carts.cart[index],
+                    );
                   },
                 ),
               );

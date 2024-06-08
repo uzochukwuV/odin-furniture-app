@@ -4,6 +4,9 @@ import 'package:odin/components/custom_text.dart';
 import 'package:odin/constants/app_theme.dart';
 
 class TextInputView extends StatelessWidget {
+  final int amount;
+
+  const TextInputView({super.key, required this.amount});
   @override
   Widget build(BuildContext context) => Container(
         width: 110.h,
@@ -22,7 +25,7 @@ class TextInputView extends StatelessWidget {
               child: Icon(Icons.add_outlined),
             ),
             CustomText(
-              text: "02",
+              text: amount > 10 ? amount.toString() : "0${amount.toString()}",
               fs: 18.sp,
               color: AppTheme.secondary,
             ),

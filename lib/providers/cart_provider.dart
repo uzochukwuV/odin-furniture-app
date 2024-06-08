@@ -3,12 +3,16 @@ import 'package:odin/models/cart.dart';
 import 'package:odin/models/product.dart';
 
 class CartProvider with ChangeNotifier {
-  final Cart _cart = Cart([]);
+  final List<Cart> _cart = [];
 
-  Cart get cart => _cart;
+  List<Cart> get cart => _cart;
 
   void addToCart(Product product) {
-    _cart.products.add(product);
+    if (_cart.any((element) => element.product.id == product.id)) {
+      _cart.singleWhere((element) => element.product.id == product.id).amount++;
+    } else {
+      _cart.add(Cart(product, 1));
+    }
 
     notifyListeners();
   }

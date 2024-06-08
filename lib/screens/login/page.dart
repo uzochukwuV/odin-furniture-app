@@ -22,6 +22,10 @@ class _MyLoginPageState extends State<MyLoginPage> {
   void initState() {
     _editingController = TextEditingController();
     _passwordController = TextEditingController();
+    _storage.readAll().then((value) => {
+          if (!jsonDecode(value["user"]!)["email"]?.isEmpty)
+            {Navigator.of(context).pushNamed("/home")}
+        });
 
     // TODO: implement initState
     super.initState();
@@ -39,6 +43,9 @@ class _MyLoginPageState extends State<MyLoginPage> {
 
   Future<void> getUser() async {
     var user = await _storage.read(key: "user");
+    var data = jsonDecode(user!);
+
+    print(data["email"]);
     print(user);
   }
 
@@ -188,9 +195,14 @@ class _MyLoginPageState extends State<MyLoginPage> {
                               SizedBox(
                                 height: 20.h,
                               ),
-                              CustomText(
-                                text: "Forget Password",
-                                fw: FontWeight.w500,
+                              GestureDetector(
+                                onTap: () {
+                                  getUser();
+                                },
+                                child: CustomText(
+                                  text: "Forget Password",
+                                  fw: FontWeight.w500,
+                                ),
                               ),
                               SizedBox(
                                 height: 40.h,

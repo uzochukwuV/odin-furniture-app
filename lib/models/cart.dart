@@ -1,7 +1,8 @@
 import 'package:odin/models/product.dart';
 
 class Cart {
-  final List<Product> products;
+  final Product product;
+  int amount;
 
-  Cart(this.products);
+  Cart(this.product, this.amount);
 }
